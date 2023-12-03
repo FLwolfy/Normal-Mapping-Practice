@@ -40,6 +40,6 @@ Make sure the following dependent libraries are installed:
 
 ## Notes
 
-This is a course PROJ. Feel free to contribute to the project by submitting bug reports or suggesting improvements. Feedback and ideas are welcomed to make Tetris Terminal Game better.
+This is a course PROJ. Feel free to contribute to the project by submitting bug reports or suggesting improvements. Feedback and ideas are welcomed to make it better.
 
 Happy gaming! 🎮
