@@ -18,10 +18,6 @@ class Tilemap:
         All tiles' info are stored in this 2D-list. 
         The 2D-list is like this: self.tiles[y][x] = tile
         '''
-        self.do_show_normal = False
-        '''
-        Toggle to see the normal color or tile color
-        '''
            
         self.generate_tiles()
         self.calculate_tiles_normal()
@@ -83,26 +79,27 @@ class Tilemap:
                 cos_value = numpy.dot(self.tiles[y][x].normal_vector, direction)
                 light_intensity = min(max(Config.MIN_LIGHT_INTENSITY, cos_value), Config.MAX_LIGHT_INTENSITY)
                 
-                # get normal color
-                normal_color = (int((self.tiles[y][x].normal_vector[0] + 1) / 2 * 255),
-                                int((self.tiles[y][x].normal_vector[1] + 1) / 2 * 255),
-                                int((self.tiles[y][x].normal_vector[2] + 1) / 2 * 255))
-                
                 # add light effect
-                new_color_normal = (normal_color[0] * light_intensity,
-                                    normal_color[1] * light_intensity,
-                                    normal_color[2] * light_intensity)
                 new_color_tile = (self.tiles[y][x].raw_color[0] * light_intensity,
                                   self.tiles[y][x].raw_color[1] * light_intensity,
                                   self.tiles[y][x].raw_color[2] * light_intensity)
                 
-                if(self.do_show_normal):
-                    self.tiles[y][x].color = new_color_normal
-                else:
-                    self.tiles[y][x].color = new_color_tile
+                self.tiles[y][x].color = new_color_tile
                            
-    def draw(self) -> None:
+    def draw_color(self, sun_angle: float) -> None:
+        self.update_day_light(sun_angle)
         for y in range(len(self.tiles)):
             for x in range(len(self.tiles[1])):
                 tile = self.tiles[y][x]
-                pygame.draw.rect(Config.WIN, tile.color, tile.rect)    
+                pygame.draw.rect(Config.WIN, tile.color, tile.rect)   
+                
+    def draw_normal(self) -> None:
+        for y in range(len(self.tiles)):
+            for x in range(len(self.tiles[1])):
+                tile = self.tiles[y][x]
+                
+                # get normal color
+                normal_color = (int((tile.normal_vector[0] + 1) / 2 * 255),
+                                int((tile.normal_vector[1] + 1) / 2 * 255),
+                                int((tile.normal_vector[2] + 1) / 2 * 255))
+                pygame.draw.rect(Config.WIN, normal_color, tile.rect)    

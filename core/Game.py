@@ -20,6 +20,7 @@ class Game:
         
         running = True
         is_paused = False
+        is_normal = False
         while running:
             # Frame rates
             clock.tick(Config.FRAME_RATE)
@@ -30,10 +31,7 @@ class Game:
                     running = False
                 elif (event.type == pygame.KEYDOWN):
                     if(event.key == pygame.K_RETURN):
-                        self.map.do_show_normal = not self.map.do_show_normal
-                        self.map.update_day_light(timer / timer_max - timer_offset)
-                        self.map.draw()
-                        pygame.display.update()
+                        is_normal = not is_normal
                     elif(event.key == pygame.K_SPACE):
                         is_paused = not is_paused
                     elif(event.key == pygame.K_LEFT):
@@ -41,26 +39,27 @@ class Game:
                     elif(event.key == pygame.K_RIGHT):
                         timer_direction = -1            
             
-            if(is_paused):
-                continue
+            # show color
+            if(not is_paused):
+                self.map.draw_color(timer / timer_max - timer_offset)
             
-            # Light Update
-            if(timer % (timer_max // 2) == 0):
-                self.map.update_day_light(timer / timer_max - timer_offset)
-            
-            # Rendering Update
-            self.map.draw()
+            # show normal
+            if(is_normal):
+                self.map.draw_normal()
             
             # Update display
             pygame.display.update()
             
             # Timer Update
-            if(timer // timer_max >= 360):
-                timer = 0
-            if(timer_direction == 1):
-                timer += 1
-            elif(timer_direction == -1):
-                timer -= 1
+            if(not is_paused):
+                if(timer // timer_max >= 360):
+                    timer = 0
+                elif(timer // timer_max < 0):
+                    timer = 360 * timer_max
+                if(timer_direction == 1):
+                    timer += 1
+                elif(timer_direction == -1):
+                    timer -= 1
                         
         pygame.quit()
         
